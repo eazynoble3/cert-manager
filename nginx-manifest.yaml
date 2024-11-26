@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3  # Number of Nginx replicas
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest  # Use the official Nginx image
+        ports:
+        - containerPort: 80  # Default Nginx HTTP port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  labels:
+    app: nginx
+spec:
+  type: LoadBalancer  # Exposes the service via a cloud provider's load balancer
+  selector:
+    app: nginx
+  ports:
+  - protocol: TCP
+    port: 80  # External port
+    targetPort: 80  # Internal container port
